@@ -1,0 +1,214 @@
+* {
+  box-sizing: border-box;
+  font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+body {
+  margin: 0;
+  background: #0f0f0f;
+  color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+#app {
+  width: 100%;
+  max-width: 420px;
+  padding: 16px;
+  text-align: center;
+}
+
+/* Top counter bar */
+.topbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+  opacity: 0.85;
+  font-size: 14px;
+}
+
+.counter,
+.left {
+  padding: 6px 10px;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.06);
+  backdrop-filter: blur(6px);
+}
+
+/* Card */
+#card {
+  width: 100%;
+  height: min(70vh, 520px);
+  border-radius: 18px;
+  overflow: hidden;
+  background: #111;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6);
+  position: relative;
+  touch-action: pan-y;
+  transition: transform 180ms ease, box-shadow 180ms ease;
+  will-change: transform, box-shadow;
+}
+
+#card.dragging {
+  transition: none !important;
+}
+
+/* Glow states */
+#card.like-glow {
+  box-shadow:
+    0 20px 40px rgba(0, 0, 0, 0.6),
+    0 0 0 4px rgba(0, 255, 120, 0.55),
+    0 0 28px rgba(0, 255, 120, 0.45);
+}
+
+#card.nope-glow {
+  box-shadow:
+    0 20px 40px rgba(0, 0, 0, 0.6),
+    0 0 0 4px rgba(255, 60, 60, 0.55),
+    0 0 28px rgba(255, 60, 60, 0.45);
+}
+
+/* Image */
+#card img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center center;
+  display: block;
+}
+
+/* Badges */
+.badge {
+  position: absolute;
+  top: 20px;
+  padding: 8px 14px;
+  border: 2px solid white;
+  border-radius: 10px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  opacity: 0;
+  user-select: none;
+  pointer-events: none;
+  transition: opacity 120ms ease;
+}
+
+#likeBadge {
+  right: 20px;
+  transform: rotate(-12deg);
+}
+
+#nopeBadge {
+  left: 20px;
+  transform: rotate(12deg);
+}
+
+/* Hint */
+.hint {
+  margin-top: 12px;
+  text-align: center;
+  opacity: 0.6;
+  font-size: 14px;
+}
+
+/* Done screen */
+.done {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: rgba(0, 0, 0, 0.55);
+  padding: 20px;
+  z-index: 50;
+}
+
+.hidden { display: none; }
+
+.doneCard {
+  width: min(360px, 92vw);
+  border-radius: 18px;
+  background: #151515;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.7);
+  padding: 22px;
+  text-align: center;
+  transform: scale(0.92);
+  opacity: 0;
+  animation: popIn 380ms ease forwards;
+}
+
+@keyframes popIn {
+  to { transform: scale(1); opacity: 1; }
+}
+
+.btn {
+  margin-top: 14px;
+  width: 100%;
+  padding: 12px 14px;
+  border-radius: 12px;
+  border: 0;
+  background: white;
+  color: black;
+  font-weight: 700;
+  font-size: 15px;
+  cursor: pointer;
+}
+
+.btn:active { transform: scale(0.98); }
+
+.btnSecondary{
+  background: rgba(255,255,255,0.10);
+  color: white;
+  border: 1px solid rgba(255,255,255,0.20);
+}
+
+/* Name overlay */
+.overlay{
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  background: rgba(0,0,0,0.65);
+}
+
+.overlayCard{
+  width: min(380px, 92vw);
+  background: #151515;
+  border-radius: 18px;
+  padding: 22px;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.7);
+  text-align: left;
+  animation: popIn 380ms ease forwards;
+}
+
+.sub{
+  opacity: .75;
+  margin-top: -6px;
+  margin-bottom: 14px;
+}
+
+.input{
+  width: 100%;
+  padding: 12px 12px;
+  border-radius: 12px;
+  border: 1px solid rgba(255,255,255,0.18);
+  background: rgba(255,255,255,0.06);
+  color: white;
+  font-size: 15px;
+  outline: none;
+}
+
+.input:focus{
+  border-color: rgba(255,255,255,0.35);
+}
+
+.status{
+  margin-top: 10px;
+  font-size: 13px;
+  opacity: .75;
+}

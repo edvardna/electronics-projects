@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Watch Swipe – Admin Export</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <style>
+    body {
+      font-family: system-ui, -apple-system, sans-serif;
+      background: #0f0f0f;
+      color: white;
+      padding: 20px;
+    }
+
+    h1 {
+      margin-bottom: 10px;
+    }
+
+    button {
+      padding: 10px 14px;
+      border-radius: 10px;
+      border: 0;
+      font-weight: 600;
+      cursor: pointer;
+      margin-bottom: 16px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 12px;
+      font-size: 14px;
+    }
+
+    th, td {
+      padding: 8px 10px;
+      border-bottom: 1px solid rgba(255,255,255,0.15);
+      text-align: left;
+    }
+
+    th {
+      background: rgba(255,255,255,0.08);
+    }
+
+    tr:hover {
+      background: rgba(255,255,255,0.05);
+    }
+  </style>
+</head>
+<body>
+
+<h1>Watch Swipe – Votes</h1>
+<button id="exportBtn">⬇ Download CSV</button>
+
+<table id="table">
+  <thead>
+    <tr>
+      <th>Voter</th>
+      <th>Watch</th>
+      <th>Vote</th>
+      <th>Time</th>
+      <th>Session</th>
+    </tr>
+  </thead>
+  <tbody></tbody>
+</table>
+
+<!-- Firebase CDN -->
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.4/firebase-app.js";
+  import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.12.4/firebase-firestore.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyCe9Xpy-HjslEdIfmwaV4bVp91ekBBR8Qw",
+    authDomain: "watch-swipe.firebaseapp.com",
+    projectId: "watch-swipe",
+    storageBucket: "watch-swipe.firebasestorage.app",
+    messagingSenderId: "1005085616976",
+    appId: "1:1005085616976:web:2cb22d6c9d8c165db6da55"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
+
+  const tbody = document.querySelector("#table tbody");
+  let rows = [];
+
+  async function loadVotes() {
+    const snap = await getDocs(collection(db, "votes"));
+    snap.forEach(doc => {
+      const d = doc.data();
+      const time = d.createdAt?.toDate
+        ? d.createdAt.toDate().toLocaleString()
+        : "";
+
+      rows.push([
+        d.voterName || "",
+        d.watch || "",
+        d.vote || "",
+        time,
+        d.sessionId || ""
+      ]);
+
+      const tr = document.createElement("tr");
+      tr.innerHTML = `
+        <td>${d.voterName || ""}</td>
+        <td>${d.watch || ""}</td>
+        <td>${d.vote || ""}</td>
+        <td>${time}</td>
+        <td>${d.sessionId || ""}</td>
+      `;
+      tbody.appendChild(tr);
+    });
+  }
+
+  function downloadCSV() {
+    let csv = "voterName,watch,vote,createdAt,sessionId\n";
+    rows.forEach(r => {
+      csv += r.map(v => `"${v}"`).join(",") + "\n";
+    });
+
+    const blob = new Blob([csv], { type: "text/csv" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "watch_votes.csv";
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    URL.revokeObjectURL(url);
+  }
+
+  document.getElementById("exportBtn").onclick = downloadCSV;
+
+  loadVotes();
+</script>
+
+</body>
+</html>
